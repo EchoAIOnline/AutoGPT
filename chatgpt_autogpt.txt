@@ -1,0 +1,57 @@
+import openai
+import os
+
+# Set OpenAI API key
+openai.api_key = os.getenv(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)
+
+# Define function to write code to file
+def write_code_to_file(code, file_name):
+    # Open file for writing
+    with open(file_name, "w") as f:
+        # Write code to file
+        f.write(code)
+
+# Define function to generate text using Auto-GPT
+def generate_auto_gpt(model, prompt):
+    # Set parameters for Auto-GPT generation
+    params = {
+        "model": model,
+        "engine": "openai",
+        "prompt": prompt,
+        "max_tokens": 1024,
+        "temperature": 0.7
+    }
+
+    # Generate text using Auto-GPT and the OpenAI API
+    response = openai.Completion.create(**params)
+    text = response.choices[0].text.strip()
+
+    return text
+
+# Define function to handle user input in ChatGPT
+def handle_user_input(model, input_text):
+    # Check if input is a command to write code
+    if input_text.startswith("!write_code"):
+        # Extract file name and code from user input
+        _, file_name, code = input_text.split(maxsplit=2)
+
+        # Send command and code to Auto-GPT using OpenAI API
+        command = f"write_code {file_name} {code}"
+        response = generate_auto_gpt(model, command)
+
+        # Return response from Auto-GPT
+        return response
+    else:
+        # TODO: Replace with your own code to generate a response using ChatGPT
+        response = "Hello, how can I help you today?"
+        return response
+
+# Example usage
+model = "davinci"  # replace with the name of your Auto-GPT model
+
+# Handle user input
+input_text = "!write_code my_program.py print('Hello, world!')"
+response = handle_user_input(model, input_text)
+
+# Print response to console
+print(response)
